@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -6,7 +7,7 @@ export default function Footer() {
       <div className="container footer-content">
         <div>
           <div className="logo" style={{ justifyContent: 'center', marginBottom: '1rem' }}>
-            <span>⚙️</span> FixUp
+             <Image src="/fixup-logo-transparent.png" alt="FixUp Logo" width={150} height={50} style={{ objectFit: 'contain' }} />
           </div>
           <p style={{ margin: 0, fontSize: '1rem' }}>Premium Mobile Repair Services in Santa Barbara</p>
         </div>

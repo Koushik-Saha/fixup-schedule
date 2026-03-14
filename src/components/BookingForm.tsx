@@ -1,6 +1,120 @@
 "use client";
 
 import React, { useState } from 'react';
+import SearchableSelect from './SearchableSelect';
+
+// Define the comprehensive device list organized by Manufacturer/Group
+const DEVICE_OPTIONS = [
+  // Apple iPhone
+  { value: "iPhone 17 Pro Max", label: "iPhone 17 Pro Max", group: "Apple iPhone" },
+  { value: "iPhone 17 Pro", label: "iPhone 17 Pro", group: "Apple iPhone" },
+  { value: "iPhone 17 Plus", label: "iPhone 17 Plus", group: "Apple iPhone" },
+  { value: "iPhone 17", label: "iPhone 17", group: "Apple iPhone" },
+  { value: "iPhone 16 Pro Max", label: "iPhone 16 Pro Max", group: "Apple iPhone" },
+  { value: "iPhone 16 Pro", label: "iPhone 16 Pro", group: "Apple iPhone" },
+  { value: "iPhone 16 Plus", label: "iPhone 16 Plus", group: "Apple iPhone" },
+  { value: "iPhone 16", label: "iPhone 16", group: "Apple iPhone" },
+  { value: "iPhone 15 Pro Max", label: "iPhone 15 Pro Max", group: "Apple iPhone" },
+  { value: "iPhone 15 Pro", label: "iPhone 15 Pro", group: "Apple iPhone" },
+  { value: "iPhone 15 Plus", label: "iPhone 15 Plus", group: "Apple iPhone" },
+  { value: "iPhone 15", label: "iPhone 15", group: "Apple iPhone" },
+  { value: "iPhone 14 Pro Max", label: "iPhone 14 Pro Max", group: "Apple iPhone" },
+  { value: "iPhone 14 Pro", label: "iPhone 14 Pro", group: "Apple iPhone" },
+  { value: "iPhone 14 Plus", label: "iPhone 14 Plus", group: "Apple iPhone" },
+  { value: "iPhone 14", label: "iPhone 14", group: "Apple iPhone" },
+  { value: "iPhone 13 Pro Max", label: "iPhone 13 Pro Max", group: "Apple iPhone" },
+  { value: "iPhone 13 Pro", label: "iPhone 13 Pro", group: "Apple iPhone" },
+  { value: "iPhone 13", label: "iPhone 13", group: "Apple iPhone" },
+  { value: "iPhone 13 mini", label: "iPhone 13 mini", group: "Apple iPhone" },
+  { value: "iPhone SE (3rd Gen)", label: "iPhone SE (3rd Gen)", group: "Apple iPhone" },
+  { value: "iPhone 12 Pro Max", label: "iPhone 12 Pro Max", group: "Apple iPhone" },
+  { value: "iPhone 12 Pro", label: "iPhone 12 Pro", group: "Apple iPhone" },
+  { value: "iPhone 12", label: "iPhone 12", group: "Apple iPhone" },
+  { value: "iPhone 12 mini", label: "iPhone 12 mini", group: "Apple iPhone" },
+  { value: "iPhone 11 Pro Max", label: "iPhone 11 Pro Max", group: "Apple iPhone" },
+  { value: "iPhone 11 Pro", label: "iPhone 11 Pro", group: "Apple iPhone" },
+  { value: "iPhone 11", label: "iPhone 11", group: "Apple iPhone" },
+  
+  // Apple iPad
+  { value: "iPad Pro 13-inch (M4)", label: "iPad Pro 13-inch (M4)", group: "Apple iPad" },
+  { value: "iPad Pro 11-inch (M4)", label: "iPad Pro 11-inch (M4)", group: "Apple iPad" },
+  { value: "iPad Air 13-inch (M2)", label: "iPad Air 13-inch (M2)", group: "Apple iPad" },
+  { value: "iPad Air 11-inch (M2)", label: "iPad Air 11-inch (M2)", group: "Apple iPad" },
+  { value: "iPad Pro 12.9-inch (M2)", label: "iPad Pro 12.9-inch (M2)", group: "Apple iPad" },
+  { value: "iPad Pro 11-inch (M2)", label: "iPad Pro 11-inch (M2)", group: "Apple iPad" },
+  { value: "iPad Air (5th Gen)", label: "iPad Air (5th Gen)", group: "Apple iPad" },
+  { value: "iPad (10th Gen)", label: "iPad (10th Gen)", group: "Apple iPad" },
+  { value: "iPad mini (6th Gen)", label: "iPad mini (6th Gen)", group: "Apple iPad" },
+
+  // Samsung Galaxy S Series
+  { value: "Samsung Galaxy S26 Ultra", label: "Galaxy S26 Ultra", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S26+", label: "Galaxy S26+", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S26", label: "Galaxy S26", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S25 Ultra", label: "Galaxy S25 Ultra", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S25+", label: "Galaxy S25+", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S25", label: "Galaxy S25", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S24 Ultra", label: "Galaxy S24 Ultra", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S24+", label: "Galaxy S24+", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S24", label: "Galaxy S24", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S23 Ultra", label: "Galaxy S23 Ultra", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S23+", label: "Galaxy S23+", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S23", label: "Galaxy S23", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S23 FE", label: "Galaxy S23 FE", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S22 Ultra", label: "Galaxy S22 Ultra", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S22+", label: "Galaxy S22+", group: "Samsung Galaxy" },
+  { value: "Samsung Galaxy S22", label: "Galaxy S22", group: "Samsung Galaxy" },
+  
+  // Samsung Z Series (Foldables)
+  { value: "Samsung Galaxy Z Fold 7", label: "Galaxy Z Fold 7", group: "Samsung Galaxy Z Fold/Flip" },
+  { value: "Samsung Galaxy Z Flip 7", label: "Galaxy Z Flip 7", group: "Samsung Galaxy Z Fold/Flip" },
+  { value: "Samsung Galaxy Z Fold 6", label: "Galaxy Z Fold 6", group: "Samsung Galaxy Z Fold/Flip" },
+  { value: "Samsung Galaxy Z Flip 6", label: "Galaxy Z Flip 6", group: "Samsung Galaxy Z Fold/Flip" },
+  { value: "Samsung Galaxy Z Fold 5", label: "Galaxy Z Fold 5", group: "Samsung Galaxy Z Fold/Flip" },
+  { value: "Samsung Galaxy Z Flip 5", label: "Galaxy Z Flip 5", group: "Samsung Galaxy Z Fold/Flip" },
+  
+  // Samsung A Series
+  { value: "Samsung Galaxy A55", label: "Galaxy A55", group: "Samsung Galaxy A Series" },
+  { value: "Samsung Galaxy A35", label: "Galaxy A35", group: "Samsung Galaxy A Series" },
+  { value: "Samsung Galaxy A54", label: "Galaxy A54", group: "Samsung Galaxy A Series" },
+  { value: "Samsung Galaxy A14", label: "Galaxy A14", group: "Samsung Galaxy A Series" },
+
+  // Google Pixel
+  { value: "Google Pixel 10 Pro Fold", label: "Pixel 10 Pro Fold", group: "Google Pixel" },
+  { value: "Google Pixel 10 Pro XL", label: "Pixel 10 Pro XL", group: "Google Pixel" },
+  { value: "Google Pixel 10 Pro", label: "Pixel 10 Pro", group: "Google Pixel" },
+  { value: "Google Pixel 10", label: "Pixel 10", group: "Google Pixel" },
+  { value: "Google Pixel 9 Pro Fold", label: "Pixel 9 Pro Fold", group: "Google Pixel" },
+  { value: "Google Pixel 9 Pro XL", label: "Pixel 9 Pro XL", group: "Google Pixel" },
+  { value: "Google Pixel 9 Pro", label: "Pixel 9 Pro", group: "Google Pixel" },
+  { value: "Google Pixel 9", label: "Pixel 9", group: "Google Pixel" },
+  { value: "Google Pixel 8 Pro", label: "Pixel 8 Pro", group: "Google Pixel" },
+  { value: "Google Pixel 8", label: "Pixel 8", group: "Google Pixel" },
+  { value: "Google Pixel 8a", label: "Pixel 8a", group: "Google Pixel" },
+  { value: "Google Pixel Fold", label: "Pixel Fold", group: "Google Pixel" },
+  { value: "Google Pixel 7 Pro", label: "Pixel 7 Pro", group: "Google Pixel" },
+  { value: "Google Pixel 7", label: "Pixel 7", group: "Google Pixel" },
+  { value: "Google Pixel 7a", label: "Pixel 7a", group: "Google Pixel" },
+
+  // OnePlus
+  { value: "OnePlus 13", label: "OnePlus 13", group: "OnePlus" },
+  { value: "OnePlus 12", label: "OnePlus 12", group: "OnePlus" },
+  { value: "OnePlus 12R", label: "OnePlus 12R", group: "OnePlus" },
+  { value: "OnePlus Open", label: "OnePlus Open", group: "OnePlus" },
+  { value: "OnePlus 11", label: "OnePlus 11", group: "OnePlus" },
+  { value: "OnePlus 10 Pro", label: "OnePlus 10 Pro", group: "OnePlus" },
+  { value: "OnePlus 10T", label: "OnePlus 10T", group: "OnePlus" },
+
+  // Motorola
+  { value: "Motorola Edge 50 Ultra", label: "Edge 50 Ultra", group: "Motorola" },
+  { value: "Motorola Edge 50 Pro", label: "Edge 50 Pro", group: "Motorola" },
+  { value: "Motorola Razr+ 2024", label: "Razr+ (2024)", group: "Motorola" },
+  { value: "Motorola Razr 2024", label: "Razr (2024)", group: "Motorola" },
+  { value: "Motorola Edge+ 2023", label: "Edge+ (2023)", group: "Motorola" },
+  { value: "Motorola Razr+ 2023", label: "Razr+ (2023)", group: "Motorola" },
+  { value: "Moto G Stylus 5G", label: "Moto G Stylus 5G", group: "Motorola" },
+  { value: "Moto G Power 5G", label: "Moto G Power 5G", group: "Motorola" }
+];
+
 
 export default function BookingForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -15,6 +129,13 @@ export default function BookingForm() {
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
 
+    // Basic validation to ensure a searchable select option was chosen and not just empty
+    if (!data.device) {
+       setErrorMsg("Please select a device model from the list.");
+       setIsSubmitting(false);
+       return;
+    }
+
     try {
       const response = await fetch('/api/book', {
         method: 'POST',
@@ -25,7 +146,12 @@ export default function BookingForm() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to book appointment');
+        let errMsg = 'Failed to book appointment';
+        try {
+           const errData = await response.json();
+           if (errData.error) errMsg = errData.error;
+        } catch(e) {}
+        throw new Error(errMsg);
       }
 
       setIsSuccess(true);
@@ -78,18 +204,14 @@ export default function BookingForm() {
 
       <div className="form-group">
         <label className="form-label" htmlFor="device">Device Model *</label>
-        <select id="device" name="device" className="form-select" required defaultValue="">
-          <option value="" disabled>Select your device</option>
-          <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
-          <option value="iPhone 15 Pro">iPhone 15 Pro</option>
-          <option value="iPhone 15">iPhone 15</option>
-          <option value="iPhone 14 Series">iPhone 14 Series</option>
-          <option value="iPhone 13 / 12 Series">iPhone 13 / 12 Series</option>
-          <option value="Samsung Galaxy S24 Series">Samsung Galaxy S24 Series</option>
-          <option value="Samsung Galaxy S23 Series">Samsung Galaxy S23 Series</option>
-          <option value="iPad / Tablet">iPad / Tablet</option>
-          <option value="Other">Other Device</option>
-        </select>
+        {/* Replaced native select with Custom Searchable Select */}
+        <SearchableSelect 
+           id="device" 
+           name="device" 
+           options={DEVICE_OPTIONS} 
+           placeholder="Search for your device (e.g. iPhone 17, Galaxy S26)" 
+           required={true}
+        />
       </div>
 
       <div className="form-group">

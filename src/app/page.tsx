@@ -41,10 +41,16 @@ export default function Home() {
           
           <div className="animate-fade-in delay-2" style={{ position: 'relative' }}>
             <div style={{ width: '100%', aspectRatio: '4/5', background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)', borderRadius: '24px', border: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url("https://images.unsplash.com/photo-1597740985671-2a8a3b80502e?auto=format&fit=crop&q=80")', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.5, mixBlendMode: 'luminosity' }}></div>
-              <div style={{ zIndex: 1, padding: '2rem', textAlign: 'center' }}>
-                 <div style={{ fontSize: '1.25rem', fontWeight: 600, color: 'white', marginBottom: '0.5rem', background: 'rgba(0,0,0,0.5)', padding: '0.5rem 1rem', borderRadius: '8px', backdropFilter: 'blur(10px)' }}>FixUp State Street</div>
-                 <div style={{ color: 'rgba(255,255,255,0.8)', background: 'rgba(0,0,0,0.5)', padding: '0.5rem 1rem', borderRadius: '8px', backdropFilter: 'blur(10px)', display: 'inline-block' }}>619 A State St, Santa Barbara</div>
+              <iframe 
+                src="https://maps.google.com/maps?q=619%20State%20St,%20Santa%20Barbara,%20CA&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0, opacity: 0.85, filter: 'contrast(1.1) brightness(0.9)' }} 
+                allowFullScreen={true}
+                loading="lazy">
+              </iframe>
+              <div style={{ zIndex: 1, padding: '2rem', textAlign: 'center', pointerEvents: 'none', position: 'absolute', bottom: '1rem', width: '100%' }}>
+                 <div style={{ fontSize: '1.25rem', fontWeight: 600, color: 'white', marginBottom: '0.5rem', background: 'rgba(0,0,0,0.75)', padding: '0.5rem 1rem', borderRadius: '8px', backdropFilter: 'blur(10px)', display: 'inline-block' }}>FixUp State Street</div>
+                 <br />
+                 <div style={{ color: 'rgba(255,255,255,0.9)', background: 'rgba(0,0,0,0.75)', padding: '0.5rem 1rem', borderRadius: '8px', backdropFilter: 'blur(10px)', display: 'inline-block' }}>619 A State St, Santa Barbara</div>
               </div>
             </div>
             {/* Floating feature card */}
